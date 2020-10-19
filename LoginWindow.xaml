@@ -1,0 +1,33 @@
+﻿<Window x:Class="BBBUG.COM.LoginWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BBBUG.COM"
+        mc:Ignorable="d"
+        Title="登录BBBUG音乐聊天室" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" OpacityMask="White" Height="280" Width="390" Loaded="LoginWindowLoaded"  >
+    <Window.Effect>
+        <DropShadowEffect BlurRadius="10" Color="#999" Direction="300" ShadowDepth="2"/>
+    </Window.Effect>
+    <Grid  >
+        <Border CornerRadius="5" Background="#333" Margin="10,5,10,15">
+            <Border CornerRadius="5" Background="#ffffff" Margin="0,36,0,0" MouseDown="Border_MouseDown" HorizontalAlignment="Right" Width="370">
+            </Border>
+        </Border>
+        <Label Content="支持帐号密码/验证码登录,暂不支持第三方登录" Margin="66,73,66,180" Foreground="#999" HorizontalAlignment="Center" />
+        <Label Content="登录BBBUG音乐聊天室" FontSize="18" Background="#333" VerticalAlignment="Center" HorizontalContentAlignment="Center"  Foreground="#FFFFFF"  Margin="10,11,0,233" MouseDown="Border_MouseDown" HorizontalAlignment="Left" Width="370" Height="36"/>
+
+        <Label Content="帐号" Margin="32,118,301,117" FontSize="18"/>
+        <Border CornerRadius="3" Background="#ddd" Margin="253,214,31,31" >
+            <Button Name="button_login" Foreground="#666" Background="#eee" BorderThickness="0" FontSize="14" Cursor="Hand" Content="立即登录" Margin="1,1" HorizontalAlignment="Center"  Click="Button_Click" Width="106" />
+        </Border>
+        <Border CornerRadius="3" Background="#ddd" Margin="94,119,31,130">
+            <TextBox TextWrapping="Wrap" Margin="1,1,1,1" FontSize="14" Padding="3,5,3,3" Name="user_account" Text="10000"/>
+        </Border>
+        <Image Source="Images/23.png" Stretch="Fill" Margin="21,16,345,240" Height="24" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="Image_MouseUp"/>
+        <Label Content="密码" Margin="32,167,301,68" FontSize="18"/>
+        <Border CornerRadius="3" Background="#ddd" Margin="94,170,31,79">
+            <PasswordBox  Margin="1,1,1,1" FontSize="14" Padding="3,5,3,3" Name="user_password" Password=""/>
+        </Border>
+    </Grid>
+</Window>
