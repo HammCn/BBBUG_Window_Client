@@ -51,6 +51,8 @@ namespace BBBUG.COM
                 LoginWindow login = new LoginWindow();
                 login.ShowDialog();
             }
+            this.MessageList = new List<Message>();
+            //
             //登录成功 获取房间信息
             this.GetRoomInfoAsync();
             this.GetMyInfo();
@@ -137,6 +139,10 @@ namespace BBBUG.COM
                 //获取成功
                 this.websocketUrl = "ws://websocket.bbbug.com/?account=" + result["data"]["account"].ToString() + "&channel=" + result["data"]["channel"].ToString() + "&ticket=" + result["data"]["ticket"].ToString();
                 Console.WriteLine(this.websocketUrl);
+                if (this.websocketConnected)
+                {
+                    this.wss.Close();
+                }
                 this.ConnectWebsocket();
             }
             else
@@ -189,17 +195,19 @@ namespace BBBUG.COM
         }
         private void websocket_Opened(object sender, EventArgs e)
         {
+            this.websocketConnected = true;
             Console.WriteLine("链接成功");
-            this.MessageList = new List<Message>();
         }
         private void websocket_Error(object sender, ErrorEventArgs e)
         {
             Console.WriteLine(e.Exception.Message);
             this.websocketReconnect();
+            this.websocketConnected = false;
         }
         private void websocket_Closed(object sender, EventArgs e)
         {
             this.websocketReconnect();
+            this.websocketConnected = false;
         }
         private void websocket_MessageReceived(object sender, MessageReceivedEventArgs e)
         {
@@ -209,36 +217,88 @@ namespace BBBUG.COM
         {
             message = System.Web.HttpUtility.UrlDecode(message, System.Text.Encoding.UTF8);
             JObject result = JObject.Parse(message);
-            if (result["type"].ToString().Equals("text"))
+            Console.WriteLine(result["type"].ToString());
+            if (this.message_list.Items.Count > 100)
             {
-                //text消息
-                Console.WriteLine(result.ToString());
-
-                MessageList.Add(new Message()
-                {
-                    message_id = result["message_id"].ToString(),
-                    message_content = System.Web.HttpUtility.UrlDecode(result["content"].ToString(), System.Text.Encoding.UTF8),
-                    user_name = result["user"]["user_name"].ToString(),
-                    user_head = result["user"]["user_head"].ToString(),
-                    fromMe = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Visible : Visibility.Hidden,
-                    fromOther = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Hidden : Visibility.Visible,
-                });
                 Action action_update_message = () =>
                 {
-                    this.message_list.ItemsSource = null;
-                    this.message_list.ItemsSource = MessageList;
+                    this.message_list.Items.RemoveAt(0);
                     Decorator decorator = (Decorator)VisualTreeHelper.GetChild(message_list, 0);
                     ScrollViewer scrollViewer = (ScrollViewer)decorator.Child;
                     scrollViewer.ScrollToEnd();
                 };
                 this.message_list.Dispatcher.BeginInvoke(action_update_message);
             }
-            else
+            if (result["type"].ToString().Equals("text"))
             {
-
+                //text消息
+                Action action_update_message = () =>
+                {
+                    this.message_list.Items.Add(new Message()
+                    {
+                        message_id = result["message_id"].ToString(),
+                        message_type = result["type"].ToString(),
+                        message_content = System.Web.HttpUtility.UrlDecode(result["content"].ToString(), System.Text.Encoding.UTF8),
+                        user_name = result["user"]["user_name"].ToString(),
+                        user_head = result["user"]["user_head"].ToString().Length < 5 ? "Images/nohead.jpg" : result["user"]["user_head"].ToString(),
+                        fromMe = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Visible : Visibility.Hidden,
+                        fromOther = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Hidden : Visibility.Visible,
+                        isPicture = result["type"].ToString().Equals("img") ? Visibility.Visible : Visibility.Hidden,
+                        isText = result["type"].ToString().Equals("text") ? Visibility.Visible : Visibility.Hidden,
+                        message_time = this.GetNowTimeFriendly(result["message_time"].ToString())
+                    });
+                    Decorator decorator = (Decorator)VisualTreeHelper.GetChild(message_list, 0);
+                    ScrollViewer scrollViewer = (ScrollViewer)decorator.Child;
+                    scrollViewer.ScrollToEnd();
+                };
+                this.message_list.Dispatcher.BeginInvoke(action_update_message);
+            }
+            else if (result["type"].ToString().Equals("img"))
+            {
+                //text消息
+                Action action_update_message = () =>
+                {
+                    this.message_list.Items.Add(new Message()
+                    {
+                        message_id = result["message_id"].ToString(),
+                        message_type = result["type"].ToString(),
+                        message_content = this.getStaticImage(System.Web.HttpUtility.UrlDecode(result["content"].ToString(), System.Text.Encoding.UTF8)),
+                        user_name = result["user"]["user_name"].ToString(),
+                        user_head = result["user"]["user_head"].ToString().Length < 5 ? "Images/nohead.jpg" : result["user"]["user_head"].ToString(),
+                        fromMe = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Visible : Visibility.Hidden,
+                        fromOther = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Hidden : Visibility.Visible,
+                        isPicture = result["type"].ToString().Equals("img") ? Visibility.Visible : Visibility.Hidden,
+                        isText = result["type"].ToString().Equals("text") ? Visibility.Visible : Visibility.Hidden,
+                        message_time = this.GetNowTimeFriendly(result["message_time"].ToString())
+                    });
+                    Decorator decorator = (Decorator)VisualTreeHelper.GetChild(message_list, 0);
+                    ScrollViewer scrollViewer = (ScrollViewer)decorator.Child;
+                    scrollViewer.ScrollToEnd();
+                };
+                this.message_list.Dispatcher.BeginInvoke(action_update_message);
             }
         }
+        private string GetNowTimeFriendly(string timestamps)
+        {
+            DateTime dtStart = TimeZone.CurrentTimeZone.ToLocalTime(new DateTime(1970, 1, 1));
+            long lTime = (Convert.ToInt64(timestamps) * 10000000);
+            TimeSpan toNow = new TimeSpan(lTime);
+            DateTime targetDt = dtStart.Add(toNow);
+            return targetDt.ToString("HH:mm");
+        }
+        private string getStaticImage(string url)
+        {
+            if(url.StartsWith("https://")|| url.StartsWith("https://")){
 
+                Console.WriteLine(url);
+                return url;
+            }
+            else
+            {
+                Console.WriteLine("https://api.bbbug.com/uploads/" + url);
+                return "https://api.bbbug.com/uploads/" + url;
+            }
+        }
         private void startAnimation()
         {
             RotateTransform rtf = new RotateTransform();
@@ -388,13 +448,14 @@ namespace BBBUG.COM
                 List<Room> RoomList = new List<Room>();
                 for (int i = 0; i < result.Count; i++)
                 {
+                    Console.WriteLine(result[i]["user_head"].ToString() ?? "Imgaes/nohead.jpg");
                     RoomList.Add(new Room()
                     {
                         room_id = result[i]["room_id"].ToString(),
                         room_name = result[i]["room_name"].ToString(),
                         room_notice = result[i]["room_notice"].ToString() ?? "房间过于牛逼，于是就不写介绍了。",
                         room_online = "("+ result[i]["room_online"].ToString() + ")",
-                        user_head = result[i]["user_head"].ToString(),
+                        user_head = result[i]["user_head"].ToString().Length<5 ? "Images/nohead.jpg" : result[i]["user_head"].ToString(),
                         showOnline = (int)result[i]["room_online"] > 0 ? Visibility.Visible : Visibility.Hidden,
                         user_name = System.Web.HttpUtility.UrlDecode(result[i]["user_name"].ToString(), System.Text.Encoding.UTF8)
                     });

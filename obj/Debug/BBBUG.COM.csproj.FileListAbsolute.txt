@@ -113,3 +113,10 @@ D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\SuperSocket.ClientEngine.dll
 D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\WebSocket4Net.dll
 D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\log4net.dll
 D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\log4net.xml
+C:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\log4net.dll
+C:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\SuperSocket.ClientEngine.dll
+C:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\WebSocket4Net.dll
+C:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\log4net.xml
+C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoadingWindow.g.cs
+C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoadingWindow.baml
+C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\GeneratedInternalTypeHelper.g.cs
