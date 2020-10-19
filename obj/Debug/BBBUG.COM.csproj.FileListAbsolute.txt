@@ -107,3 +107,9 @@ C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\BBBUG.COM.csproj.CoreCompileInputs.c
 C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\BBBUG.COM.csproj.CopyComplete
 C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\BBBUG.COM.exe
 C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\BBBUG.COM.pdb
+D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoadingWindow.g.cs
+D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoadingWindow.baml
+D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\SuperSocket.ClientEngine.dll
+D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\WebSocket4Net.dll
+D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\log4net.dll
+D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\log4net.xml

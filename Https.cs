@@ -49,7 +49,7 @@ namespace BBBUG {
                 postDict["version"] = Https.Version;
             }
             var postData = new FormUrlEncodedContent(postDict);
-            Console.WriteLine(postData);
+            Console.WriteLine(postData.ToString());
             var handler = new HttpClientHandler()
             {
                 AutomaticDecompression = DecompressionMethods.GZip
