@@ -56,6 +56,83 @@ namespace BBBUG.COM
             //登录成功 获取房间信息
             this.GetRoomInfoAsync();
             this.GetMyInfo();
+
+        }
+        private void PickSong(object sender, MouseEventArgs args)
+        {
+            this.PickSongAsync();
+        }
+        private async Task PickSongAsync()
+        {
+            if (this.song_list.SelectedItem!=null)
+            {
+                //点歌
+                Dictionary<string, string> postData = new Dictionary<string, string>()
+                {
+                    {"mid", ((Song)(this.song_list.SelectedItem)).mid },
+                    {"room_id", this.roomId },
+                };
+                JObject result = (JObject)await Https.PostAsync("song/addSong", postData);
+                if (result["code"].ToString().Equals(Https.CodeSuccess))
+                {
+                    AlertWindow alert = new AlertWindow();
+                    alert.showDialog(result["msg"].ToString());
+                }
+                else if (result["code"].ToString().Equals(Https.CodeLogin))
+                {
+                    LoginWindow login = new LoginWindow();
+                    login.ShowDialog();
+                }
+                else
+                {
+                    AlertWindow alert = new AlertWindow();
+                    alert.showDialog(result["msg"].ToString());
+                }
+            }
+        }
+        private void SearchSong(object sender,MouseEventArgs args)
+        {
+            this.SearchSongAsync();
+        }
+        private async Task SearchSongAsync()
+        {
+            string keyword = search_song_keyword.Text.Trim();
+            if (keyword.Length>0)
+            {
+                Dictionary<string, string> postData = new Dictionary<string, string>()
+                {
+                    {"keyword", keyword },
+                };
+                JObject result = (JObject)await Https.PostAsync("song/search", postData);
+                if (result["code"].ToString().Equals(Https.CodeSuccess))
+                {
+                    Action action_update_song = () =>
+                    {
+                        this.song_list.Items.Clear();
+                        for (int i = 0; i < ((JArray)(result["data"])).Count; i++)
+                        {
+                            this.song_list.Items.Add(new Song
+                            {
+                                mid = ((JArray)(result["data"]))[i]["mid"].ToString(),
+                                name = ((JArray)(result["data"]))[i]["name"].ToString(),
+                                pic = ((JArray)(result["data"]))[i]["pic"].ToString(),
+                                singer = ((JArray)(result["data"]))[i]["singer"].ToString(),
+                            }); ;
+                        }
+                    };
+                    this.song_list.Dispatcher.BeginInvoke(action_update_song);
+                }
+                else if (result["code"].ToString().Equals(Https.CodeLogin))
+                {
+                    LoginWindow login = new LoginWindow();
+                    login.ShowDialog();
+                }
+                else
+                {
+                    AlertWindow alert = new AlertWindow();
+                    alert.showDialog(result["msg"].ToString());
+                }
+            }
         }
         private async Task GetMyInfo()
         {
@@ -282,6 +359,19 @@ namespace BBBUG.COM
                 };
                 this.message_list.Dispatcher.BeginInvoke(action_update_message);
             }
+            else if (result["type"].ToString().Equals("playSong"))
+            {
+                Action action_update_song_name = () =>
+                {
+                    this.show_song_name.Content = ((JObject)(result["song"]))["name"] + "-" + ((JObject)(result["song"]))["singer"];
+                };
+                this.show_song_name.Dispatcher.BeginInvoke(action_update_song_name);
+                Action action_update_song_user = () =>
+                {
+                    this.show_song_user.Content = "点歌人: " + ((JObject)(result["user"]))["user_name"];
+                };
+                this.show_song_user.Dispatcher.BeginInvoke(action_update_song_user);
+            }
         }
         private string GetNowTimeFriendly(string timestamps)
         {
@@ -394,17 +484,21 @@ namespace BBBUG.COM
         {
             selectRoomBoxShow = true;
             this.ShowSelectRoomBox();
+            searchSongBoxShow = true;
+            this.ShowSearchSongBox();
         }
         private void HideAllBoxClicked(object sender,MouseButtonEventArgs e)
         {
             this.hideAllBox();
         }
-        DispatcherTimer selectRoomBoxTimer;
         private void ShowSelectRoomBoxClicked(object sender, MouseButtonEventArgs e)
         {
+            searchSongBoxShow = true;
+            this.ShowSearchSongBox();
             this.ShowSelectRoomBox();
         }
-        private bool isLoadingRoomList=false;
+        DispatcherTimer selectRoomBoxTimer;
+        private bool isLoadingRoomList = false;
         private void ShowSelectRoomBox()
         {
             if (this.isLoadingRoomList)
@@ -421,7 +515,8 @@ namespace BBBUG.COM
         {
             int width = 350;
             this.isLoadingRoomList = true;
-            if (!selectRoomBoxShow) { 
+            if (!selectRoomBoxShow)
+            {
                 if (this.selectRoomBox.Margin.Right >= 10)
                 {
                     selectRoomBoxTimer.Stop();
@@ -431,12 +526,12 @@ namespace BBBUG.COM
                 }
                 else
                 {
-                    selectRoomBox.Margin = new Thickness(10, 10, (this.selectRoomBox.Margin.Right + 30)> 10?10: (this.selectRoomBox.Margin.Right + 30), 10);
+                    selectRoomBox.Margin = new Thickness(10, 10, (this.selectRoomBox.Margin.Right + 30) > 10 ? 10 : (this.selectRoomBox.Margin.Right + 30), 10);
                 }
             }
             else
             {
-                if (this.selectRoomBox.Margin.Right <= 0- width - 50)
+                if (this.selectRoomBox.Margin.Right <= 0 - width - 50)
                 {
                     selectRoomBoxTimer.Stop();
                     selectRoomBoxShow = false;
@@ -444,7 +539,59 @@ namespace BBBUG.COM
                 }
                 else
                 {
-                    selectRoomBox.Margin = new Thickness(10, 10, (this.selectRoomBox.Margin.Right - 30) < (0- width- 50) ? (0 - width - 50) : (this.selectRoomBox.Margin.Right - 30), 10);
+                    selectRoomBox.Margin = new Thickness(10, 10, (this.selectRoomBox.Margin.Right - 30) < (0 - width - 50) ? (0 - width - 50) : (this.selectRoomBox.Margin.Right - 30), 10);
+                }
+            }
+        }
+        private void ShowSearchSongBoxClicked(object sender, MouseButtonEventArgs e)
+        {
+            selectRoomBoxShow = true;
+            this.ShowSelectRoomBox();
+            this.ShowSearchSongBox();
+        }
+        DispatcherTimer searchSongBoxTimer;
+        private bool isLoadingSearchSongBox = false;
+        private void ShowSearchSongBox()
+        {
+            if (this.isLoadingSearchSongBox)
+            {
+                return;
+            }
+            searchSongBoxTimer = new DispatcherTimer();
+            searchSongBoxTimer.Interval = new TimeSpan(100000);   //时间间隔为20ms
+            searchSongBoxTimer.Tick += new EventHandler(searchSongBoxAnimation);
+            searchSongBoxTimer.Start();
+        }
+        bool searchSongBoxShow = false;
+        public void searchSongBoxAnimation(object sender, EventArgs e)
+        {
+            int width = 350;
+            this.isLoadingSearchSongBox = true;
+            if (!searchSongBoxShow)
+            {
+                if (this.searchSongBox.Margin.Right >= 10)
+                {
+                    searchSongBoxTimer.Stop();
+                    searchSongBoxShow = true;
+                    this.getHotRoomData();
+                    this.isLoadingSearchSongBox = false;
+                }
+                else
+                {
+                    searchSongBox.Margin = new Thickness(10, 10, (this.searchSongBox.Margin.Right + 30) > 10 ? 10 : (this.searchSongBox.Margin.Right + 30), 10);
+                }
+            }
+            else
+            {
+                if (this.searchSongBox.Margin.Right <= 0 - width - 50)
+                {
+                    searchSongBoxTimer.Stop();
+                    searchSongBoxShow = false;
+                    this.isLoadingSearchSongBox = false;
+                }
+                else
+                {
+                    searchSongBox.Margin = new Thickness(10, 10, (this.searchSongBox.Margin.Right - 30) < (0 - width - 50) ? (0 - width - 50) : (this.searchSongBox.Margin.Right - 30), 10);
                 }
             }
         }
@@ -512,5 +659,38 @@ namespace BBBUG.COM
                 }
             }
         }
+
+        private void SearchSongTextBoxFocused(object sender, RoutedEventArgs e)
+        {
+            if (search_song_keyword.Text.Equals("输入歌手/歌名/专辑搜索..."))
+            {
+                search_song_keyword.Text = "";
+            }
+        }
+
+        private void SearchSongTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (search_song_keyword.Text.Trim().Length == 0)
+            {
+                search_song_keyword.Text = "输入歌手/歌名/专辑搜索...";
+            }
+        }
+
+        private void SendMessageTextBoxFocused(object sender, RoutedEventArgs e)
+        {
+            if (message_input.Text.Equals("说点什么吧..."))
+            {
+                message_input.Text = "";
+            }
+        }
+
+        private void SendMessageTextBoxLostFocus(object sender, RoutedEventArgs e)
+        {
+            if (message_input.Text.Trim().Length == 0)
+            {
+                message_input.Text = "说点什么吧...";
+            }
+        }
+
     }
 }

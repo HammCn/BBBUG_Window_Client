@@ -374,36 +374,32 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type ListBoxItem}">
-                        <Grid x:Name="grid" Margin="5,5,5,5" Width="335" Cursor="Hand">
-                            <Border CornerRadius="5" Background="#fff" Padding="10,10,10,10" HorizontalAlignment="Stretch" Margin="0,0,0,1" VerticalAlignment="Stretch" > 
+                        <Grid x:Name="grid" Margin="5,5,5,5" Width="335">
+                            <Border CornerRadius="5" Background="#fff" Padding="10,10,10,10" HorizontalAlignment="Stretch" Margin="0,0,0,1" VerticalAlignment="Stretch" >
                                 <Grid>
-                                    <Border Margin="0,0,10,0" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" Width="60" Height="60" CornerRadius="8" BorderBrush="White" BorderThickness="0"  VerticalAlignment="Top" HorizontalAlignment="Left"  >
-                                        <Border.Background>
-                                            <ImageBrush ImageSource="{Binding user_head}" RenderOptions.BitmapScalingMode="HighQuality"/>
-                                        </Border.Background>
-                                    </Border>
-                                    <StackPanel Orientation="Horizontal" Margin="70,0,70,0" HorizontalAlignment="Left">
-                                        <TextBlock Margin="0,0,5,0" FontWeight="Bold" Text="{Binding room_online}"  FontSize="14" Foreground="#ff4500" Visibility="{Binding showOnline}"/>
-                                        <TextBlock Text="{Binding room_name}"   FontSize="14" Foreground="#333" HorizontalAlignment="Left" 
+                                    <StackPanel Orientation="Horizontal" Margin="00,0,70,0" HorizontalAlignment="Left">
+                                        <TextBlock Text="{Binding name}" FontSize="14" Foreground="#333" HorizontalAlignment="Left" 
                                            ScrollViewer.HorizontalScrollBarVisibility="Disabled"
                                            ScrollViewer.VerticalScrollBarVisibility="Disabled"
                                            TextTrimming="CharacterEllipsis"/>
                                     </StackPanel>
-                                    <Viewbox Stretch="None" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Top">
-                                        <Border CornerRadius="5" Background="#f5f5f5" Padding="5,2,5,2" >
+                                    <StackPanel Orientation="Horizontal" Margin="00,30,70,0" HorizontalAlignment="Left">
+                                        <TextBlock Text="歌手: " FontSize="12" Foreground="#999" HorizontalAlignment="Left" 
+                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                           TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding singer}" FontSize="12" Foreground="#999" HorizontalAlignment="Left" 
+                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                           TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <Viewbox Stretch="None" HorizontalAlignment="Right" Margin="0,10,0,0" VerticalAlignment="Top">
+                                        <Border CornerRadius="5" Background="#eee" Padding="10,5" >
                                             <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Right">
-                                                <TextBlock TextWrapping = "Wrap" Foreground="#999" Text="ID: " TextTrimming="CharacterEllipsis" FontSize="12" Margin="0"/>
-                                                <TextBlock TextWrapping = "Wrap" Foreground="#999" Text="{Binding room_id}" TextTrimming="CharacterEllipsis" FontSize="12" Margin="0"/>
+                                                <TextBlock MouseUp="PickSong" Cursor="Hand" Foreground="#666" Text="点" FontSize="12" Margin="0"/>
                                             </StackPanel>
                                         </Border>
                                     </Viewbox>
-                                    <StackPanel Orientation="Horizontal"  Margin="70,25,10,0"  HorizontalAlignment="Left">
-                                        <TextBlock Text="{Binding user_name}"  FontSize="14" Foreground="#333"/>
-                                    </StackPanel>
-                                    <TextBlock Text="{Binding room_notice}" Margin="70,45,0,0" FontSize="12" Foreground="#aaa" HorizontalAlignment="Left" 
-                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
-                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
-                                           TextTrimming="CharacterEllipsis"/>
                                 </Grid>
                             </Border>
                         </Grid>
@@ -416,7 +412,7 @@
         <Border CornerRadius="10" Background="#ddd" Margin="10,10,10,10"/>
         <Border CornerRadius="5,0,0,5" Background="#333333" Margin="10,10,0,10" Width="80" HorizontalAlignment="Left" MouseDown="Border_MouseDown"/>
         <Grid>
-            <Image Source="Images/menubar_picksong.png" Stretch="Fill" Margin="34,150,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="我要点歌"/>
+            <Image Source="Images/menubar_picksong.png" Stretch="Fill" Margin="34,150,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="我要点歌" MouseUp="ShowSearchSongBoxClicked"/>
             <Image Source="Images/menubar_pickedsong.png" Stretch="Fill" Margin="34,210,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="已点歌曲列表"/>
             <Image Source="Images/menubar_mysong.png" Stretch="Fill" Margin="34,270,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="我点过的歌曲"/>
             <Image Source="Images/menubar_selectroom.png" Stretch="Fill" Margin="34,330,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="房间列表" MouseUp="ShowSelectRoomBoxClicked"/>
@@ -463,13 +459,13 @@
             </Border>
             <Border CornerRadius="0,0,5,0"  Background="#F5F5F5" Margin="90,10,10,10" Height="100" VerticalAlignment="Bottom" MouseUp="HideAllBoxClicked">
                 <Grid>
-                    <TextBox Name="message_input" Background="Transparent" Margin="10" BorderThickness="0" Text=" " FontSize="14" Foreground="#333" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" KeyDown="MessageInputKeydown"/>
+                    <TextBox GotFocus="SendMessageTextBoxFocused" LostFocus="SendMessageTextBoxLostFocus" Name="message_input" Background="Transparent" Margin="10" BorderThickness="0" Text="说点什么吧..." FontSize="14" Foreground="#333" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" KeyDown="MessageInputKeydown"/>
                     <Grid Margin="10,0,0,10" VerticalAlignment="Bottom" HorizontalAlignment="Left">
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
                             <Image Name="icon_song_player" Source="Images/music.png" Stretch="Fill"  Height="24" VerticalAlignment="Center" Width="24" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True"/>
-                            <Label Content="不能说的咪咪 - 周杰伦" Foreground="#333" FontSize="12" VerticalAlignment="Center" Margin="0,-2,0,0"></Label>
+                            <Label Name="show_song_name" Content="歌曲加载中..." Foreground="#333" FontSize="12" VerticalAlignment="Center" Margin="0,-2,0,0"></Label>
                             <Image Cursor="Hand" ToolTip="点击切歌" Source="Images/1_music82.png" Stretch="Fill"  Height="24" Width="24" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True"/>
-                            <Label Content="点歌人：Hamm" Foreground="#999" FontSize="12" HorizontalAlignment="Left" Margin="0,-2,0,0"></Label>
+                            <Label Name="show_song_user" Content="" Foreground="#999" FontSize="12" HorizontalAlignment="Left" Margin="0,-2,0,0"></Label>
                             <Image Visibility="Hidden" Source="Images/1_music90.png" Stretch="Fill"  Height="24" Width="24" VerticalAlignment="Center" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True"/>
                         </StackPanel>
                     </Grid>
@@ -482,7 +478,7 @@
 
         <Border Name="selectRoomBox" Background="#f5f5f5" CornerRadius="0,5,5,0" Margin="10,10,-400,10" Width="350" HorizontalAlignment="Right" Opacity="1">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="10" Color="#333" Direction="270" Opacity="0.3" RenderingBias="Performance" ShadowDepth="1">
+                <DropShadowEffect BlurRadius="10" Color="#333" Direction="180" Opacity="0.3" RenderingBias="Performance" ShadowDepth="1">
                     <Storyboard.TargetProperty>
                         BlurRadius
                     </Storyboard.TargetProperty>
@@ -521,7 +517,7 @@
         </Border>
         <Border Name="searchSongBox" Background="#f5f5f5" CornerRadius="0,5,5,0" Margin="10,10,-400,10" Width="350" HorizontalAlignment="Right" Opacity="1">
             <Border.Effect>
-                <DropShadowEffect BlurRadius="10" Color="#333" Direction="270" Opacity="0.3" RenderingBias="Performance" ShadowDepth="1">
+                <DropShadowEffect BlurRadius="10" Color="#333" Direction="180" Opacity="0.3" RenderingBias="Performance" ShadowDepth="1">
                     <Storyboard.TargetProperty>
                         BlurRadius
                     </Storyboard.TargetProperty>
@@ -534,15 +530,16 @@
                         <TextBlock TextWrapping = "Wrap" Foreground="#fff" Text="我的房间" TextTrimming="CharacterEllipsis" FontSize="14" Margin="0"/>
                     </Border>
                 </Viewbox>
-                <Border Margin="15,60,5,5" Height="30" VerticalAlignment="Top">
-                    <Grid>
-                        <TextBox Text="搜索歌曲" BorderThickness="0"></TextBox>
-                    </Grid>
-                </Border>
+                <Grid Margin="10,50,0,5" >
+                    <Border Height="30" Margin="0,0,40,0" VerticalAlignment="Top" CornerRadius="5" Background="#fff" Padding="6">
+                        <TextBox Name="search_song_keyword" Text="输入歌手/歌名/专辑搜索..." GotFocus="SearchSongTextBoxFocused" FontSize="12" BorderThickness="0" Background="Transparent" LostFocus="SearchSongTextBoxLostFocus"></TextBox>
+                    </Border>
+                    <Image Source="Images/button_search.png" MouseUp="SearchSong" Stretch="Fill" Margin="0,2,8,0" Height="24" Width="24" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Right" Cursor="Hand" ToolTip="搜索"/>
+                </Grid>
                 <Label FontSize="12" Foreground="#ccc" Margin="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">更多音乐正在接入中，反馈建议请联系10000房房管.</Label>
                 <Grid>
-                    <Border Background="#F5F5F5" Margin="0,100,0,25"  Grid.ColumnSpan="2" >
-                        <ListBox SelectedItem="{Binding CurrentSelectItem}" BorderThickness="1" ItemContainerStyle="{StaticResource SearchSongStyle}" x:Name="song_list " BorderBrush="#eaeaeb" Background="Transparent" Margin="0,0,0,0 ">
+                    <Border Background="#F5F5F5" Margin="0,90,0,25">
+                        <ListBox SelectedItem="{Binding CurrentSelectItem}" BorderThickness="1" ItemContainerStyle="{StaticResource SearchSongStyle}" x:Name="song_list" BorderBrush="#eaeaeb" Background="Transparent" Margin="0,0,0,0 ">
                             <ListBox.Style>
                                 <Style TargetType="{x:Type ListBox}">
                                     <Setter Property="Template">

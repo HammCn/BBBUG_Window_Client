@@ -184,6 +184,7 @@
   <ItemGroup>
     <Compile Include="Model\Message.cs" />
     <Compile Include="Model\Room.cs" />
+    <Compile Include="Model\Song.cs" />
     <Compile Include="Properties\AssemblyInfo.cs">
       <SubType>Code</SubType>
     </Compile>
@@ -244,6 +245,9 @@
   </ItemGroup>
   <ItemGroup>
     <Resource Include="Images\menubar_selectroom.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Images\button_search.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
