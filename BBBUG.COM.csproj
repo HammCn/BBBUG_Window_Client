@@ -176,7 +176,6 @@
     <Compile Include="LoginWindow.xaml.cs">
       <DependentUpon>LoginWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="MainConverter.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -212,44 +211,39 @@
   <ItemGroup>
     <Resource Include="Images\1567952196.jpg" />
     <Resource Include="Images\17.png" />
+    <Resource Include="Images\1_music82.png" />
+    <Resource Include="Images\1_music84.png" />
+    <Resource Include="Images\1_music85.png" />
+    <Resource Include="Images\1_music90.png" />
     <Resource Include="Images\23.png" />
     <Resource Include="Images\28.png" />
     <Resource Include="Images\9.png" />
+    <Resource Include="Images\audio.png" />
     <Resource Include="Images\CRM管理 %281%29.png" />
-    <Resource Include="Images\CRM管理.png" />
+    <Resource Include="Images\icon_meeting_fill.png" />
     <Resource Include="Images\icon_message_fill.png" />
+    <Resource Include="Images\icon_people_fill.png" />
     <Resource Include="Images\icon_signal_fill.png" />
+    <Resource Include="Images\menubar_mysong.png" />
+    <Resource Include="Images\menubar_pickedsong.png" />
+    <Resource Include="Images\menubar_picksong.png" />
+    <Resource Include="Images\menubar_setting.png" />
+    <Resource Include="Images\music.png" />
+    <Resource Include="Images\nohead.jpg" />
     <Resource Include="Images\player_bar.png" />
     <Resource Include="Images\player_bg.png" />
+    <Resource Include="Images\round_add_fill.png" />
     <Resource Include="Images\对话 语音 %281%29.png" />
     <Resource Include="Images\对话 语音.png" />
-    <Resource Include="Images\待办事项 %281%29.png" />
     <Resource Include="Images\待办事项.png" />
     <Resource Include="Images\更多 全部 %281%29.png" />
     <Resource Include="Images\更多 全部.png" />
     <Resource Include="Images\模块分类 %281%29.png" />
     <Resource Include="Images\模块分类.png" />
-    <Resource Include="Images\系统 设置 %281%29.png" />
     <Resource Include="Images\系统 设置.png" />
   </ItemGroup>
   <ItemGroup>
-    <Resource Include="Images\icon_meeting_fill.png" />
-    <Resource Include="Images\round_add_fill.png" />
-    <Resource Include="Images\task_fill.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\icon_people_fill.png" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\nohead.jpg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Resource Include="Images\1_music82.png" />
-    <Resource Include="Images\1_music84.png" />
-    <Resource Include="Images\1_music85.png" />
-    <Resource Include="Images\1_music90.png" />
-    <Resource Include="Images\audio.png" />
-    <Resource Include="Images\music.png" />
+    <Resource Include="Images\menubar_selectroom.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

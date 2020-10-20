@@ -44,7 +44,7 @@ namespace BBBUG.COM
         public MainWindow()
         {
             InitializeComponent();
-            //this.startAnimation();
+            this.startAnimation();
             //this.stopAnimation();
             if (Https.AccessToken =="" && true)
             {
@@ -94,7 +94,7 @@ namespace BBBUG.COM
                 //获取房间成功
                 this.roomInfo = (JObject)roomInfo["data"];
                 this.UpdateRoomUI();
-                //this.GetRoomMessageHistory();
+                this.GetRoomMessageHistory();
                 this.GetRoomWebsocketAsync();
             }
             else if (roomInfo["code"].ToString().Equals(Https.CodeRedirect))
@@ -164,12 +164,17 @@ namespace BBBUG.COM
             if (result["code"].ToString().Equals(Https.CodeSuccess))
             {
                 Console.WriteLine(result.ToString());
+                for(int i = ((JArray)result["data"]).Count-1; i >=0; i--)
+                {
+                    this.MessageController(((JArray)(result["data"]))[i]["message_content"].ToString());
+                }
                 //获取成功
             }
             else
             {
-                //显示错误的提示信息
-                AlertWindow alert = new AlertWindow();
+
+        //显示错误的提示信息
+        AlertWindow alert = new AlertWindow();
                 alert.showDialog(roomInfo["msg"].ToString());
             }
         }
@@ -302,19 +307,19 @@ namespace BBBUG.COM
         private void startAnimation()
         {
             RotateTransform rtf = new RotateTransform();
-            rtf.CenterX = Convert.ToDouble(50);
-            rtf.CenterY = Convert.ToDouble(50);
-            image_song_picture.RenderTransform = rtf;
+            rtf.CenterX = Convert.ToDouble(12);
+            rtf.CenterY = Convert.ToDouble(12);
+            icon_song_player.RenderTransform = rtf;
             DoubleAnimation dbAscending = new DoubleAnimation(0, 360, new Duration
-            (TimeSpan.FromSeconds(30)));
+            (TimeSpan.FromSeconds(10)));
             dbAscending.RepeatBehavior = RepeatBehavior.Forever;
             rtf.BeginAnimation(RotateTransform.AngleProperty, dbAscending);
         }
         private void stopAnimation()
         {
             RotateTransform rtf = new RotateTransform();
-            rtf.CenterX = Convert.ToDouble(50);
-            rtf.CenterY = Convert.ToDouble(50);
+            rtf.CenterX = Convert.ToDouble(12);
+            rtf.CenterY = Convert.ToDouble(12);
             image_song_picture.RenderTransform = rtf;
         }
         private void Button_Click(object sender, RoutedEventArgs e)
@@ -385,53 +390,61 @@ namespace BBBUG.COM
                 alert.showDialog(result["msg"].ToString());
             }
         }
-
-        DispatcherTimer pickSongBoxTimer;
-        private void ShowPickSongBoxClicked(object sender, MouseButtonEventArgs e)
+        private void hideAllBox()
         {
-            this.ShowPickSongBox();
+            selectRoomBoxShow = true;
+            this.ShowSelectRoomBox();
+        }
+        private void HideAllBoxClicked(object sender,MouseButtonEventArgs e)
+        {
+            this.hideAllBox();
+        }
+        DispatcherTimer selectRoomBoxTimer;
+        private void ShowSelectRoomBoxClicked(object sender, MouseButtonEventArgs e)
+        {
+            this.ShowSelectRoomBox();
         }
         private bool isLoadingRoomList=false;
-        private void ShowPickSongBox()
+        private void ShowSelectRoomBox()
         {
             if (this.isLoadingRoomList)
             {
                 return;
             }
-            pickSongBoxTimer = new DispatcherTimer();
-            pickSongBoxTimer.Interval = new TimeSpan(100000);   //时间间隔为20ms
-            pickSongBoxTimer.Tick += new EventHandler(pickSongBoxAnimation);
-            pickSongBoxTimer.Start();
+            selectRoomBoxTimer = new DispatcherTimer();
+            selectRoomBoxTimer.Interval = new TimeSpan(100000);   //时间间隔为20ms
+            selectRoomBoxTimer.Tick += new EventHandler(selectRoomBoxAnimation);
+            selectRoomBoxTimer.Start();
         }
-        bool pickSongBoxShow = false;
-        public void pickSongBoxAnimation(object sender, EventArgs e)
+        bool selectRoomBoxShow = false;
+        public void selectRoomBoxAnimation(object sender, EventArgs e)
         {
             int width = 350;
             this.isLoadingRoomList = true;
-            if (!pickSongBoxShow) { 
-                if (this.pickSongBox.Margin.Right >= 10)
+            if (!selectRoomBoxShow) { 
+                if (this.selectRoomBox.Margin.Right >= 10)
                 {
-                    pickSongBoxTimer.Stop();
-                    pickSongBoxShow = true;
+                    selectRoomBoxTimer.Stop();
+                    selectRoomBoxShow = true;
                     this.getHotRoomData();
                     this.isLoadingRoomList = false;
                 }
                 else
                 {
-                    pickSongBox.Margin = new Thickness(10, 10, (this.pickSongBox.Margin.Right + 30)> 10?10: (this.pickSongBox.Margin.Right + 30), 10);
+                    selectRoomBox.Margin = new Thickness(10, 10, (this.selectRoomBox.Margin.Right + 30)> 10?10: (this.selectRoomBox.Margin.Right + 30), 10);
                 }
             }
             else
             {
-                if (this.pickSongBox.Margin.Right <= 0- width - 50)
+                if (this.selectRoomBox.Margin.Right <= 0- width - 50)
                 {
-                    pickSongBoxTimer.Stop();
-                    pickSongBoxShow = false;
+                    selectRoomBoxTimer.Stop();
+                    selectRoomBoxShow = false;
                     this.isLoadingRoomList = false;
                 }
                 else
                 {
-                    pickSongBox.Margin = new Thickness(10, 10, (this.pickSongBox.Margin.Right - 30) < (0- width- 50) ? (0 - width - 50) : (this.pickSongBox.Margin.Right - 30), 10);
+                    selectRoomBox.Margin = new Thickness(10, 10, (this.selectRoomBox.Margin.Right - 30) < (0- width- 50) ? (0 - width - 50) : (this.selectRoomBox.Margin.Right - 30), 10);
                 }
             }
         }
@@ -483,8 +496,8 @@ namespace BBBUG.COM
             Room room = (Room)((ListBox)e.Source).SelectedItem;
             this.roomId = room.room_id;
             this.GetRoomInfoAsync();
-            this.pickSongBoxShow = true;
-            this.ShowPickSongBox();
+            this.selectRoomBoxShow = true;
+            this.ShowSelectRoomBox();
         }
 
         private void MessageInputKeydown(object sender, KeyEventArgs e)

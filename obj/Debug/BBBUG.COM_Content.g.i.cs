@@ -8,6 +8,6 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("9.png")]
+[assembly: System.Windows.Resources.AssemblyAssociatedContentFileAttribute("images/menubar_picked.png")]
 
 
