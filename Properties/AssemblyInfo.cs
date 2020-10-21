@@ -7,13 +7,13 @@ using System.Windows;
 // 有关程序集的一般信息由以下
 // 控制。更改这些特性值可修改
 // 与程序集关联的信息。
-[assembly: AssemblyTitle("BBBUG.COM")]
-[assembly: AssemblyDescription("")]
+[assembly: AssemblyTitle("BBBUG音乐聊天室")]
+[assembly: AssemblyDescription("BBBUG音乐聊天室客户端")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("")]
+[assembly: AssemblyCompany("BBBUG.COM")]
 [assembly: AssemblyProduct("BBBUG.COM")]
 [assembly: AssemblyCopyright("Copyright ©  2020")]
-[assembly: AssemblyTrademark("")]
+[assembly: AssemblyTrademark("BBBUG.COM")]
 [assembly: AssemblyCulture("")]
 
 // 将 ComVisible 设置为 false 会使此程序集中的类型

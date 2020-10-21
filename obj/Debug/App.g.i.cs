@@ -58,7 +58,7 @@ namespace BBBUG.COM {
             
             #line default
             #line hidden
-            System.Uri resourceLocater = new System.Uri("/BBBUG.COM;component/app.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BBBUG音乐聊天室;component/app.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\App.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

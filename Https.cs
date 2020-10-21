@@ -61,5 +61,45 @@ namespace BBBUG {
                 return (JObject)JsonConvert.DeserializeObject(data);
             }
         }
+        public static async Task<HttpResponseMessage> PostMusicUrl(string url, Dictionary<string, string> postDict)
+        {
+            if (!postDict.ContainsKey("access_token"))
+            {
+                postDict.Add("access_token", Https.AccessToken);
+            }
+            else
+            {
+                postDict["access_token"] = Https.AccessToken;
+            }
+            if (!postDict.ContainsKey("plat"))
+            {
+                postDict.Add("plat", Https.Plat);
+            }
+            else
+            {
+                postDict["plat"] = Https.Plat;
+            }
+            if (!postDict.ContainsKey("version"))
+            {
+                postDict.Add("version", Https.Version);
+            }
+            else
+            {
+                postDict["version"] = Https.Version;
+            }
+            var postData = new FormUrlEncodedContent(postDict);
+            Console.WriteLine(postData.ToString());
+            var handler = new HttpClientHandler()
+            {
+                AutomaticDecompression = DecompressionMethods.GZip,
+                AllowAutoRedirect=false
+            };
+            using (var http = new HttpClient(handler))
+            {
+                var response = await http.PostAsync(Https.BaseApiUrl + url, postData);
+                return response;
+            }
+        }
     }
+
 }

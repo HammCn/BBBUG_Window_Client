@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Windows;
 
 namespace BBBUG.COM.Model
 {
@@ -12,5 +8,7 @@ namespace BBBUG.COM.Model
         public string name { get; set; }
         public string pic { get; set; }
         public string singer {get;set;}
+        public string pickerName { get; set; }
+        public Visibility showDelete { get; set; }
     }
 }

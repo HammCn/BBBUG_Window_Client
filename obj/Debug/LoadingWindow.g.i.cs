@@ -68,7 +68,7 @@ namespace BBBUG.COM {
                 return;
             }
             _contentLoaded = true;
-            System.Uri resourceLocater = new System.Uri("/BBBUG.COM;component/loadingwindow.xaml", System.UriKind.Relative);
+            System.Uri resourceLocater = new System.Uri("/BBBUG音乐聊天室;component/loadingwindow.xaml", System.UriKind.Relative);
             
             #line 1 "..\..\LoadingWindow.xaml"
             System.Windows.Application.LoadComponent(this, resourceLocater);

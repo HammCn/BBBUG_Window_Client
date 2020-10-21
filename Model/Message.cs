@@ -16,6 +16,7 @@ namespace BBBUG.COM
         public string message_content { set; get; }
         public Visibility fromMe { set; get; }
         public Visibility fromOther { set; get; }
+        public Visibility fromSystem { set; get; }
         public string message_time { get; set; }
         public string message_type { get; set; }
         public Visibility isPicture { set; get; }
