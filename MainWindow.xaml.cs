@@ -283,7 +283,7 @@ namespace BBBUG.COM
             {
                 //获取房间成功
                 userInfo = (JObject)result["data"];
-                if(userInfo["myRoom"].ToString().Equals("False"))
+                if (userInfo["myRoom"].ToString().Equals("False"))
                 {
                     enter_my_room.Text = "创建房间";
                 }

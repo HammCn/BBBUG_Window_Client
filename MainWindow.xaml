@@ -534,9 +534,7 @@
             <Image Source="Images/menubar_setting.png" Stretch="Fill" Margin="34,0,0,34" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="Hand" ToolTip="设置" MouseUp="SettingClicked"/>
 
             <Border Cursor="Hand" ToolTip="修改我的资料" Width="50" Height="50" CornerRadius="8" BorderBrush="White" BorderThickness="0"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,67,0,0" MouseUp="MyHeadImageClicked" >
-                <Border.Background>
-                    <ImageBrush ImageSource="https://oscimg.oschina.net/oscnet/up-f108e334b130164b027f8af5104545e8.jpg"/>
-                </Border.Background>
+                <Image Name="my_head_img" Width="50" Height="50" Source="Images/nohead.jpg"></Image>
             </Border>
         </Grid>
         <Grid>
