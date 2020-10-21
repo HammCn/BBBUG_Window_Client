@@ -9,6 +9,7 @@ namespace BBBUG.COM.Model
         public string pic { get; set; }
         public string singer {get;set;}
         public string pickerName { get; set; }
+        public string played { get; set; }
         public Visibility showDelete { get; set; }
     }
 }

@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BBBUG.COM"
         mc:Ignorable="d"
-        Title="BBBUG音乐聊天室" Height="666" Width="1000" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" OpacityMask="White"  >
+        Title="BBBUG音乐聊天室" Height="666" Width="1000" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" OpacityMask="White" Closing="MainWindowClosing"  >
     <Window.Effect>
         <DropShadowEffect BlurRadius="10" Color="#ccc" Direction="100" ShadowDepth="0"/>
     </Window.Effect>
@@ -269,13 +269,12 @@
                                         <TextBlock TextWrapping = "Wrap" Foreground="#666" MaxWidth="300" Text="{Binding message_content}" TextTrimming="CharacterEllipsis" FontSize="14" Margin="0" VerticalAlignment="Stretch" HorizontalAlignment="Stretch"/>
                                     </Border>
                                 </Viewbox>
-                                <Border CornerRadius="5" Margin="60,20,20,10" HorizontalAlignment="Left"  Background="#f5f5f5" Visibility="{Binding isPicture}" MaxWidth="200" MaxHeight="200">
+                                <Border CornerRadius="5" Margin="60,20,20,10" HorizontalAlignment="Left"  Background="#f5f5f5" Visibility="{Binding isPicture}">
                                     <Image Cursor="Hand" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" ToolTip="点击查看大图" 
                                            Width="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelWidth}"
-                                       Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelHeight}" 
-                                           MaxWidth="200" MaxHeight="200"
+                                       Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelHeight}"  MaxWidth="300" MaxHeight="300" VerticalAlignment="Top" Stretch="Uniform" 
                                       Source="{Binding message_content}"
-                                         Stretch="Fill" Margin="5"/>
+                                          Margin="5"/>
                                 </Border>
 
                                 <Label Margin="-5,55,0,0" Width="60" HorizontalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Left"  FontSize="12" Foreground="#aaa" Content="{Binding message_time}"></Label>
@@ -297,10 +296,9 @@
                                 <Border CornerRadius="5" Margin="20,30,70,0" HorizontalAlignment="Right" Padding="5" Background="#f5f5f5" Visibility="{Binding isPicture}">
                                     <Image Cursor="Hand" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" ToolTip="点击查看大图" 
                                            Width="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelWidth}"
-                                       Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelHeight}"
-                                           MaxWidth="200" MaxHeight="200"
-                                      Source="{Binding message_content,IsAsync=true}"
-                                         Stretch="Fill" />
+                                       Height="{Binding RelativeSource={RelativeSource Self}, Path=Source.PixelHeight}"  MaxWidth="300" MaxHeight="300" VerticalAlignment="Top" Stretch="Uniform" 
+                                      Source="{Binding message_content}"
+                                          Margin="5"/>
                                 </Border>
                                 <Label Margin="0,55,5,0" Width="60" HorizontalContentAlignment="Center" VerticalAlignment="Top" HorizontalAlignment="Right"  FontSize="12" Foreground="#aaa" Content="{Binding message_time}"></Label>
                             </Grid>
@@ -470,6 +468,60 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        <Style x:Key="MySongStyle" TargetType="{x:Type ListBoxItem}">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type ListBoxItem}">
+                        <Grid x:Name="grid" Margin="5,5,5,5" Width="335">
+                            <Border CornerRadius="5" Background="#fff" Padding="10,10,10,10" HorizontalAlignment="Stretch" Margin="0,0,0,1" VerticalAlignment="Stretch" >
+                                <Grid>
+                                    <StackPanel Orientation="Horizontal" Margin="00,0,70,0" HorizontalAlignment="Left">
+                                        <TextBlock Text="{Binding name}" FontSize="14" Foreground="#333" HorizontalAlignment="Left" 
+                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                           TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal" Margin="00,30,70,0" HorizontalAlignment="Left">
+                                        <TextBlock Text="点过: " FontSize="12" Foreground="#999" HorizontalAlignment="Left" 
+                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                           TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding played}" FontSize="12" Foreground="#999" HorizontalAlignment="Left" 
+                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                           TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="次 歌手: " FontSize="12" Foreground="#999" HorizontalAlignment="Left" 
+                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                           ScrollViewer.VerticalScrollBarVisibility="Disabled" 
+                                           TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Text="{Binding singer}" FontSize="12" Foreground="#999" HorizontalAlignment="Left" 
+                                           ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                                           ScrollViewer.VerticalScrollBarVisibility="Disabled"
+                                           TextTrimming="CharacterEllipsis"/>
+                                    </StackPanel>
+                                    <Viewbox Stretch="None" HorizontalAlignment="Right" Margin="0,0,0,0" VerticalAlignment="Top">
+                                        <Grid>
+                                            <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Right">
+                                                <Border CornerRadius="5" Background="#eee" Padding="10,5"  Margin="5,0,0,0" >
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Right">
+                                                        <TextBlock MouseUp="DeleteMySong" Cursor="Hand" Foreground="#666" Text="删" FontSize="12" Margin="0" ToolTip="从你的最爱列表删除" />
+                                                    </StackPanel>
+                                                </Border>
+                                                <Border CornerRadius="5" Background="#67C23A" Padding="10,5"  Margin="5,0,0,0">
+                                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0" HorizontalAlignment="Right">
+                                                        <TextBlock MouseUp="PickMySong" Cursor="Hand" Foreground="#fff" Text="点" FontSize="12" Margin="0" ToolTip="点歌"/>
+                                                    </StackPanel>
+                                                </Border>
+                                            </StackPanel>
+                                        </Grid>
+                                    </Viewbox>
+                                </Grid>
+                            </Border>
+                        </Grid>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
     </Window.Resources>
     <Grid>
         <Border CornerRadius="10" Background="#ddd" Margin="10,10,10,10"/>
@@ -477,11 +529,11 @@
         <Grid>
             <Image Source="Images/menubar_picksong.png" Stretch="Fill" Margin="34,150,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="我要点歌" MouseUp="ShowSearchSongBoxClicked"/>
             <Image Source="Images/menubar_pickedsong.png" Stretch="Fill" Margin="34,210,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="已点歌曲列表" MouseUp="ShowPickedSongBoxClicked"/>
-            <Image Source="Images/menubar_mysong.png" Stretch="Fill" Margin="34,270,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="我点过的歌曲"/>
+            <Image Source="Images/menubar_mysong.png" Stretch="Fill" Margin="34,270,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="我点过的歌曲" MouseUp="ShowMySongBoxClicked"/>
             <Image Source="Images/menubar_selectroom.png" Stretch="Fill" Margin="34,330,0,0" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Left" Cursor="Hand" ToolTip="房间列表" MouseUp="ShowSelectRoomBoxClicked"/>
-            <Image Source="Images/menubar_setting.png" Stretch="Fill" Margin="34,0,0,34" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="Hand" ToolTip="设置"/>
+            <Image Source="Images/menubar_setting.png" Stretch="Fill" Margin="34,0,0,34" Height="32" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Bottom" HorizontalAlignment="Left" Cursor="Hand" ToolTip="设置" MouseUp="SettingClicked"/>
 
-            <Border Cursor="Hand" ToolTip="修改我的资料" Width="50" Height="50" CornerRadius="8" BorderBrush="White" BorderThickness="0"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,67,0,0" >
+            <Border Cursor="Hand" ToolTip="修改我的资料" Width="50" Height="50" CornerRadius="8" BorderBrush="White" BorderThickness="0"  VerticalAlignment="Top" HorizontalAlignment="Left" Margin="25,67,0,0" MouseUp="MyHeadImageClicked" >
                 <Border.Background>
                     <ImageBrush ImageSource="https://oscimg.oschina.net/oscnet/up-f108e334b130164b027f8af5104545e8.jpg"/>
                 </Border.Background>
@@ -501,7 +553,7 @@
                     <TextBlock Name="room_title" Text="BBBUG聊天室" FontSize="16" Background="Transparent" Foreground="#333333" Margin="10,0,0,0" Padding="0" />
                 </StackPanel>
             </Border>
-            <Border Background="#F5F5F5" Margin="90,56,10,111" Padding="0,0,0,20" MouseUp="HideAllBoxClicked">
+            <Border Background="#F5F5F5" Margin="90,56,10,111" Padding="0,0,0,40" MouseUp="HideAllBoxClicked">
                 <ListBox BorderThickness="0" ItemContainerStyle="{StaticResource MessageStyle}" x:Name="message_list" BorderBrush="#eaeaeb" Background="Transparent" Margin="0,0,0,0 ">
                     <ListBox.Style>
                         <Style TargetType="{x:Type ListBox}">
@@ -520,6 +572,55 @@
                     </ListBox.Style>
                 </ListBox>
             </Border>
+            <Grid>
+                <Grid Margin="100,10,10,120" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center">
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="0" Source="Images/button_emoji.png" Stretch="Fill"  Height="32" VerticalAlignment="Center" Width="32" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="ShowEmojiBox"/>
+                        <Image Cursor="Hand" ToolTip="发送图片" Margin="10,0" Source="Images/img-circle.png" Stretch="Fill"  Height="28" VerticalAlignment="Center" Width="28" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True"/>
+                    </StackPanel>
+                </Grid>
+                <Border Background="#fff" CornerRadius="5" Name="emoji_box" Visibility="Hidden" Margin="100,10,10,160" VerticalAlignment="Bottom" HorizontalAlignment="Left">
+                    <Border.Effect>
+                        <DropShadowEffect BlurRadius="10" Color="#333" Direction="180" Opacity="0.3" RenderingBias="Performance" ShadowDepth="1">
+                            <Storyboard.TargetProperty>
+                                BlurRadius
+                            </Storyboard.TargetProperty>
+                        </DropShadowEffect>
+                    </Border.Effect>
+                    <WrapPanel Orientation="Horizontal" HorizontalAlignment="Left" VerticalAlignment="Center" Width="250" Height="300">
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/1.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/2.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/3.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/4.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/5.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/6.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/7.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/8.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/9.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/10.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/11.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/12.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/13.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/14.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/15.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/16.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/17.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/18.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/19.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/20.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/21.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/22.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/23.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/24.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/25.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/26.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/27.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/28.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/29.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                        <Image Cursor="Hand" ToolTip="Emoji" Margin="10" Source="Images/Emojis/30.png" Stretch="Fill"  Height="30" VerticalAlignment="Center" Width="30" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="EmojiSendClickedAsync"/>
+                    </WrapPanel>
+                </Border>
+            </Grid>
             <Border CornerRadius="0,0,5,0"  Background="#F5F5F5" Margin="90,10,10,10" Height="100" VerticalAlignment="Bottom" MouseUp="HideAllBoxClicked">
                 <Grid>
                     <TextBox GotFocus="SendMessageTextBoxFocused" LostFocus="SendMessageTextBoxLostFocus" Name="message_input" Background="Transparent" Margin="10" BorderThickness="0" Text="说点什么吧..." FontSize="14" Foreground="#333" TextWrapping="Wrap" VerticalAlignment="Stretch" HorizontalAlignment="Stretch" KeyDown="MessageInputKeydown"/>
@@ -551,12 +652,12 @@
                 <Label FontSize="18" FontWeight="Bold" Foreground="#333" Margin="10">推荐热门房间</Label>
                 <Viewbox Stretch="None" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top">
                     <Border CornerRadius="3" Background="#666" Padding="15,8,15,8" Cursor="Hand">
-                        <TextBlock TextWrapping = "Wrap" Foreground="#fff" Text="我的房间" TextTrimming="CharacterEllipsis" FontSize="14" Margin="0"/>
+                        <TextBlock x:Name="enter_my_room" TextWrapping = "Wrap" Foreground="#fff" Text="我的房间" TextTrimming="CharacterEllipsis" FontSize="14" Margin="0" MouseUp="EnterMyRoomClicked"/>
                     </Border>
                 </Viewbox>
                 <Label FontSize="12" Foreground="#ccc" Margin="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">温馨提示：房间无用户在线将不会出现在此列表</Label>
                 <Grid>
-                    <Border Background="#F5F5F5" Margin="0,50,0,25"  Grid.ColumnSpan="2" >
+                    <Border Background="#F5F5F5" Margin="0,50,0,25"  >
                         <ListBox MouseDoubleClick="SelectRoomChanged" SelectedItem="{Binding CurrentSelectItem}" BorderThickness="1" ItemContainerStyle="{StaticResource RoomListStyle}" x:Name="room_list" BorderBrush="#eaeaeb" Background="Transparent" Margin="0,0,0,0 ">
                             <ListBox.Style>
                                 <Style TargetType="{x:Type ListBox}">
@@ -588,14 +689,9 @@
             </Border.Effect>
             <Grid >
                 <Label FontSize="18" FontWeight="Bold" Foreground="#333" Margin="10">歌曲搜索</Label>
-                <Viewbox Stretch="None" HorizontalAlignment="Right" Margin="0,10,10,0" VerticalAlignment="Top" Visibility="Hidden">
-                    <Border CornerRadius="3" Background="#666" Padding="15,8,15,8" Cursor="Hand">
-                        <TextBlock TextWrapping = "Wrap" Foreground="#fff" Text="我的房间" TextTrimming="CharacterEllipsis" FontSize="14" Margin="0"/>
-                    </Border>
-                </Viewbox>
                 <Grid Margin="10,50,0,5" >
                     <Border Height="30" Margin="0,0,40,0" VerticalAlignment="Top" CornerRadius="5" Background="#fff" Padding="6">
-                        <TextBox Name="search_song_keyword" Text="输入歌手/歌名/专辑搜索..." GotFocus="SearchSongTextBoxFocused" FontSize="12" BorderThickness="0" Background="Transparent" LostFocus="SearchSongTextBoxLostFocus"></TextBox>
+                        <TextBox Name="search_song_keyword" Text="输入歌手/歌名/专辑搜索..." GotFocus="SearchSongTextBoxFocused" FontSize="12" BorderThickness="0" Background="Transparent" LostFocus="SearchSongTextBoxLostFocus" KeyDown="SearchSongTextBoxKeydown"></TextBox>
                     </Border>
                     <Image Source="Images/button_search.png" MouseUp="SearchSong" Stretch="Fill" Margin="0,2,8,0" Height="24" Width="24" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" VerticalAlignment="Top" HorizontalAlignment="Right" Cursor="Hand" ToolTip="搜索"/>
                 </Grid>
@@ -637,7 +733,7 @@
             </Border.Effect>
             <Grid >
                 <Label FontSize="18" FontWeight="Bold" Foreground="#333" Margin="10">正在等待播放的歌曲</Label>
-                <Label FontSize="12" Foreground="#ccc" Margin="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">更多音乐正在接入中，反馈建议请联系10000房房管.</Label>
+                <Label FontSize="12" Foreground="#ccc" Margin="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">遇到喜欢的歌?快顶上去插个队吧!</Label>
                 <Grid>
                     <Border Background="#F5F5F5" Margin="0,40,0,25">
                         <ListBox SelectedItem="{Binding CurrentSelectItem}" BorderThickness="1" ItemContainerStyle="{StaticResource PickedSongStyle}" x:Name="picked_list" BorderBrush="#eaeaeb" Background="Transparent" Margin="0,0,0,0 ">
@@ -661,6 +757,44 @@
 
                     <Border Background="#F5F5F5" Margin="0,40,0,25" Name="picked_song_nodata" >
                         <Label Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#999" FontSize="14">没有歌曲啦，快去点歌吧~</Label>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Border>
+        <Border Name="mySongBox" Background="#f5f5f5" CornerRadius="0,5,5,0" Margin="10,10,-400,10" Width="350" HorizontalAlignment="Right" Opacity="1">
+            <Border.Effect>
+                <DropShadowEffect BlurRadius="10" Color="#333" Direction="180" Opacity="0.3" RenderingBias="Performance" ShadowDepth="1">
+                    <Storyboard.TargetProperty>
+                        BlurRadius
+                    </Storyboard.TargetProperty>
+                </DropShadowEffect>
+            </Border.Effect>
+            <Grid >
+                <Label FontSize="18" FontWeight="Bold" Foreground="#333" Margin="10">你最喜欢点的歌</Label>
+                <Label FontSize="12" Foreground="#ccc" Margin="0" VerticalAlignment="Bottom" HorizontalAlignment="Left">温馨提示：此列表将显示你最喜欢的50首歌</Label>
+                <Grid>
+                    <Border Background="#F5F5F5" Margin="0,50,0,25"  >
+                        <ListBox SelectedItem="{Binding CurrentSelectItem}" BorderThickness="1" ItemContainerStyle="{StaticResource MySongStyle}" x:Name="my_list" BorderBrush="#eaeaeb" Background="Transparent" Margin="0,0,0,0 ">
+                            <ListBox.Style>
+                                <Style TargetType="{x:Type ListBox}">
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="{x:Type ListBox}">
+                                                <Border x:Name="Bd"  BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Padding="0">
+                                                    <ScrollViewer Focusable="False">
+                                                        <ItemsPresenter />
+                                                    </ScrollViewer>
+                                                </Border>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                </Style>
+                            </ListBox.Style>
+                        </ListBox>
+                    </Border>
+
+                    <Border Background="#F5F5F5" Margin="0,50,0,25" Name="my_song_nodata">
+                        <Label Margin="0,0,0,0" VerticalAlignment="Center" HorizontalAlignment="Center" Foreground="#999" FontSize="14">你还没有点过歌呀，快去点歌吧~</Label>
                     </Border>
                 </Grid>
             </Grid>

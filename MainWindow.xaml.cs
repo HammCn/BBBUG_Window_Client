@@ -3,7 +3,10 @@ using Newtonsoft.Json.Linq;
 using SuperSocket.ClientEngine;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Net.Http;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -79,7 +82,8 @@ namespace BBBUG.COM
                 DeleteSongAsync((Song)picked_list.SelectedItem);
             }
         }
-        private async Task DeleteSongAsync(Song song) { 
+        private async Task DeleteSongAsync(Song song)
+        {
             //点歌
             Dictionary<string, string> postData = new Dictionary<string, string>()
                 {
@@ -92,6 +96,39 @@ namespace BBBUG.COM
                 AlertWindow alert = new AlertWindow();
                 alert.showDialog(result["msg"].ToString());
                 getPickedSongData();
+            }
+            else if (result["code"].ToString().Equals(Https.CodeLogin))
+            {
+                LoginWindow login = new LoginWindow();
+                login.ShowDialog();
+            }
+            else
+            {
+                AlertWindow alert = new AlertWindow();
+                alert.showDialog(result["msg"].ToString());
+            }
+        }
+        private void DeleteMySong(object sender, MouseEventArgs args)
+        {
+            if (my_list.SelectedItem != null)
+            {
+                DeleteMySongAsync((Song)my_list.SelectedItem);
+            }
+        }
+        private async Task DeleteMySongAsync(Song song)
+        {
+            //点歌
+            Dictionary<string, string> postData = new Dictionary<string, string>()
+                {
+                    {"mid",song.mid },
+                    {"room_id", roomId },
+                };
+            JObject result = await Https.PostAsync("song/deleteMySong", postData);
+            if (result["code"].ToString().Equals(Https.CodeSuccess))
+            {
+                AlertWindow alert = new AlertWindow();
+                alert.showDialog(result["msg"].ToString());
+                getMySongData();
             }
             else if (result["code"].ToString().Equals(Https.CodeLogin))
             {
@@ -137,36 +174,43 @@ namespace BBBUG.COM
                 alert.showDialog(result["msg"].ToString());
             }
         }
+        private void PickMySong(object sender, MouseEventArgs args)
+        {
+            if (my_list.SelectedItem != null)
+            {
+                PickSongAsync(((Song)(my_list.SelectedItem)));
+            }
+        }
         private void PickSong(object sender, MouseEventArgs args)
         {
-            PickSongAsync();
-        }
-        private async Task PickSongAsync()
-        {
-            if (song_list.SelectedItem!=null)
+            if (song_list.SelectedItem != null)
             {
-                //点歌
-                Dictionary<string, string> postData = new Dictionary<string, string>()
-                {
-                    {"mid", ((Song)(song_list.SelectedItem)).mid },
-                    {"room_id", roomId },
-                };
-                JObject result = (JObject)await Https.PostAsync("song/addSong", postData);
-                if (result["code"].ToString().Equals(Https.CodeSuccess))
-                {
-                    AlertWindow alert = new AlertWindow();
-                    alert.showDialog(result["msg"].ToString());
-                }
-                else if (result["code"].ToString().Equals(Https.CodeLogin))
-                {
-                    LoginWindow login = new LoginWindow();
-                    login.ShowDialog();
-                }
-                else
-                {
-                    AlertWindow alert = new AlertWindow();
-                    alert.showDialog(result["msg"].ToString());
-                }
+                PickSongAsync(((Song)(song_list.SelectedItem)));
+            }
+        }
+        private async Task PickSongAsync(Song song)
+        {
+            //点歌
+            Dictionary<string, string> postData = new Dictionary<string, string>()
+            {
+                {"mid", song.mid },
+                {"room_id", roomId },
+            };
+            JObject result = (JObject)await Https.PostAsync("song/addSong", postData);
+            if (result["code"].ToString().Equals(Https.CodeSuccess))
+            {
+                AlertWindow alert = new AlertWindow();
+                alert.showDialog(result["msg"].ToString());
+            }
+            else if (result["code"].ToString().Equals(Https.CodeLogin))
+            {
+                LoginWindow login = new LoginWindow();
+                login.ShowDialog();
+            }
+            else
+            {
+                AlertWindow alert = new AlertWindow();
+                alert.showDialog(result["msg"].ToString());
             }
         }
         private void SearchSong(object sender,MouseEventArgs args)
@@ -239,6 +283,14 @@ namespace BBBUG.COM
             {
                 //获取房间成功
                 userInfo = (JObject)result["data"];
+                if(userInfo["myRoom"].ToString().Equals("False"))
+                {
+                    enter_my_room.Text = "创建房间";
+                }
+                else
+                {
+                    enter_my_room.Text = "我的房间";
+                }
             }
             else if (result["code"].ToString().Equals(Https.CodeLogin))
             {
@@ -267,7 +319,7 @@ namespace BBBUG.COM
                 roomInfo = (JObject)roomInfo["data"];
                 message_list.Items.Clear();
                 UpdateRoomUI();
-                GetRoomMessageHistory();
+                //GetRoomMessageHistory();
                 GetRoomWebsocketAsync();
             }
             else if (roomInfo["code"].ToString().Equals(Https.CodeRedirect))
@@ -409,7 +461,6 @@ namespace BBBUG.COM
             }
             if (result["type"].ToString().Equals("text"))
             {
-                //text消息
                 Action action_update_message = () =>
                 {
                     message_list.Items.Add(new Message()
@@ -434,14 +485,21 @@ namespace BBBUG.COM
             }
             else if (result["type"].ToString().Equals("img"))
             {
-                //text消息
+                WebClient client = new WebClient();
+                HMACSHA1 hmacsha1 = new HMACSHA1();
+                string fileUrl = getStaticImage(System.Web.HttpUtility.UrlDecode(result["content"].ToString(), System.Text.Encoding.UTF8));
+                byte[] rstRes = hmacsha1.ComputeHash(Encoding.UTF8.GetBytes(fileUrl));
+                string shaString = System.Web.HttpUtility.UrlEncode(Convert.ToBase64String(rstRes)); 
+                if(!System.IO.File.Exists(Environment.CurrentDirectory + "/temp/" + shaString + ".jpg")) { 
+                    client.DownloadFile(fileUrl, Environment.CurrentDirectory + "/temp/" + shaString + ".jpg");
+                }
                 Action action_update_message = () =>
                 {
                     message_list.Items.Add(new Message()
                     {
                         message_id = result["message_id"].ToString(),
                         message_type = result["type"].ToString(),
-                        message_content = getStaticImage(System.Web.HttpUtility.UrlDecode(result["content"].ToString(), System.Text.Encoding.UTF8)),
+                        message_content = Environment.CurrentDirectory + "/temp/" + shaString + ".jpg",
                         user_name = result["user"]["user_name"].ToString(),
                         user_head = result["user"]["user_head"].ToString().Length < 5 ? "Images/nohead.jpg" : result["user"]["user_head"].ToString(),
                         fromMe = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Visible : Visibility.Hidden,
@@ -694,6 +752,10 @@ namespace BBBUG.COM
             ShowSearchSongBox();
             pickedSongBoxShow = true;
             ShowPickedSongBox();
+            mySongBoxShow = true;
+            ShowMySongBox();
+
+            emoji_box.Visibility = Visibility.Hidden;
         }
         private void HideAllBoxClicked(object sender,MouseButtonEventArgs e)
         {
@@ -706,6 +768,9 @@ namespace BBBUG.COM
 
             searchSongBoxShow = true;
             ShowSearchSongBox();
+
+            mySongBoxShow = true;
+            ShowMySongBox();
 
             ShowSelectRoomBox();
         }
@@ -763,6 +828,9 @@ namespace BBBUG.COM
             searchSongBoxShow = true;
             ShowSearchSongBox();
 
+            mySongBoxShow = true;
+            ShowMySongBox();
+
             ShowPickedSongBox();
         }
         DispatcherTimer pickedSongBoxTimer;
@@ -819,6 +887,9 @@ namespace BBBUG.COM
             pickedSongBoxShow = true;
             ShowPickedSongBox();
 
+            mySongBoxShow = true;
+            ShowMySongBox();
+
             ShowSearchSongBox();
         }
         DispatcherTimer searchSongBoxTimer;
@@ -866,6 +937,65 @@ namespace BBBUG.COM
                 }
             }
         }
+        private void ShowMySongBoxClicked(object sender, MouseButtonEventArgs e)
+        {
+            selectRoomBoxShow = true;
+            ShowSelectRoomBox();
+
+            pickedSongBoxShow = true;
+            ShowPickedSongBox();
+
+            searchSongBoxShow = true;
+            ShowSearchSongBox();
+
+            ShowMySongBox();
+        }
+        DispatcherTimer mySongBoxTimer;
+        private bool isLoadingMySongBox = false;
+        private void ShowMySongBox()
+        {
+            if (isLoadingMySongBox)
+            {
+                return;
+            }
+            mySongBoxTimer = new DispatcherTimer();
+            mySongBoxTimer.Interval = new TimeSpan(100000);   //时间间隔为20ms
+            mySongBoxTimer.Tick += new EventHandler(mySongBoxAnimation);
+            mySongBoxTimer.Start();
+        }
+        bool mySongBoxShow = false;
+        public void mySongBoxAnimation(object sender, EventArgs e)
+        {
+            int width = 350;
+            isLoadingMySongBox = true;
+            if (!mySongBoxShow)
+            {
+                if (mySongBox.Margin.Right >= 10)
+                {
+                    mySongBoxTimer.Stop();
+                    mySongBoxShow = true;
+                    isLoadingMySongBox = false;
+                    getMySongData();
+                }
+                else
+                {
+                    mySongBox.Margin = new Thickness(10, 10, (mySongBox.Margin.Right + 30) > 10 ? 10 : (mySongBox.Margin.Right + 30), 10);
+                }
+            }
+            else
+            {
+                if (mySongBox.Margin.Right <= 0 - width - 50)
+                {
+                    mySongBoxTimer.Stop();
+                    mySongBoxShow = false;
+                    isLoadingMySongBox = false;
+                }
+                else
+                {
+                    mySongBox.Margin = new Thickness(10, 10, (mySongBox.Margin.Right - 30) < (0 - width - 50) ? (0 - width - 50) : (mySongBox.Margin.Right - 30), 10);
+                }
+            }
+        }
         Visibility showDelete = Visibility.Hidden;
         public async void getPickedSongData()
         {
@@ -881,7 +1011,7 @@ namespace BBBUG.COM
                     picked_list.Items.Clear();
                     for (int i = 0; i < ((JArray)(result["data"])).Count; i++)
                     {
-                        if(Convert.ToInt32(userInfo["user_admin"]) == 1 || Convert.ToInt32(userInfo["user_id"])==Convert.ToInt32(roomInfo["room_user"]) || Convert.ToInt32(userInfo["user_id"]) == Convert.ToInt32(result["data"][i]["user"]["user_id"]))
+                        if (Convert.ToInt32(userInfo["user_admin"]) == 1 || Convert.ToInt32(userInfo["user_id"]) == Convert.ToInt32(roomInfo["room_user"]) || Convert.ToInt32(userInfo["user_id"]) == Convert.ToInt32(result["data"][i]["user"]["user_id"]))
                         {
                             showDelete = Visibility.Visible;
                         }
@@ -914,7 +1044,62 @@ namespace BBBUG.COM
                 };
                 picked_song_nodata.Dispatcher.BeginInvoke(action_update_song_picked_no_data);
 
-                
+
+            }
+            else if (result["code"].ToString().Equals(Https.CodeLogin))
+            {
+                //需要登录
+                LoginWindow login = new LoginWindow();
+                login.ShowDialog();
+            }
+            else
+            {
+                //显示错误的提示信息
+                AlertWindow alert = new AlertWindow();
+                alert.showDialog(result["msg"].ToString());
+            }
+        }
+        public async void getMySongData()
+        {
+            Dictionary<string, string> postData = new Dictionary<string, string>()
+            {
+                {"room_id",roomId },
+                //{"order","recent" },
+                {"per_page","50" }
+            };
+            JObject result = (JObject)await Https.PostAsync("song/mySongList", postData);
+            if (result["code"].ToString().Equals(Https.CodeSuccess))
+            {
+                Action action_update_song_my = () =>
+                {
+                    my_list.Items.Clear();
+                    for (int i = 0; i < ((JArray)(result["data"])).Count; i++)
+                    {
+                        my_list.Items.Add(new Song
+                        {
+                            mid = ((JArray)(result["data"]))[i]["mid"].ToString(),
+                            name = ((JArray)(result["data"]))[i]["name"].ToString(),
+                            singer = ((JArray)(result["data"]))[i]["singer"].ToString(),
+                            pic = ((JArray)(result["data"]))[i]["pic"].ToString(),
+                            played = ((JArray)(result["data"]))[i]["played"].ToString(),
+                        }); ;
+                    }
+                };
+                my_list.Dispatcher.BeginInvoke(action_update_song_my);
+                Action action_update_song_my_no_data = () =>
+                {
+                    if (my_list.Items.Count > 0)
+                    {
+                        my_song_nodata.Visibility = Visibility.Hidden;
+                    }
+                    else
+                    {
+                        my_song_nodata.Visibility = Visibility.Visible;
+                    }
+                };
+                my_song_nodata.Dispatcher.BeginInvoke(action_update_song_my_no_data);
+
+
             }
             else if (result["code"].ToString().Equals(Https.CodeLogin))
             {
@@ -969,10 +1154,8 @@ namespace BBBUG.COM
                 alert.showDialog(roomInfo["msg"].ToString());
             }
         }
-        LoadingWindow loading;
         private void SelectRoomChanged(object sender, MouseButtonEventArgs e)
         {
-            loading = new LoadingWindow();
             Room room = (Room)((ListBox)e.Source).SelectedItem;
             roomId = room.room_id;
             GetRoomInfoAsync();
@@ -1031,6 +1214,10 @@ namespace BBBUG.COM
             {
                 PassSongAsync();
             }
+            else
+            {
+                wss.Send("getNowSong");
+            }
         }
         private async Task PassSongAsync()
         {
@@ -1051,7 +1238,8 @@ namespace BBBUG.COM
                 {
                     AlertWindow alert = new AlertWindow();
                     alert.showDialog(result["msg"].ToString());
-                    audio.controls.pause();
+                    audio.controls.stop();
+                    nowSongObject = null;
                 }
             }
             else if (result["code"].ToString().Equals(Https.CodeLogin))
@@ -1061,6 +1249,76 @@ namespace BBBUG.COM
             }
             else
             {
+                AlertWindow alert = new AlertWindow();
+                alert.showDialog(result["msg"].ToString());
+            }
+        }
+
+        private void SearchSongTextBoxKeydown(object sender, KeyEventArgs e)
+        {
+            if(e.Key == Key.Enter)
+            {
+                SearchSongAsync();
+            }
+        }
+
+        private void MainWindowClosing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            Environment.Exit(0);
+        }
+
+        private void EnterMyRoomClicked(object sender, MouseButtonEventArgs e)
+        {
+            if (enter_my_room.Text.Equals("我的房间"))
+            {
+                roomId = userInfo["myRoom"]["room_id"].ToString();
+                GetRoomInfoAsync();
+            }
+            else
+            {
+                new AlertWindow().showDialog("创建房间功能即将上线,你可以先在PC端创建房间后再玩耍~");
+            }
+        }
+
+        private void MyHeadImageClicked(object sender, MouseButtonEventArgs e)
+        {
+            new AlertWindow().showDialog("个人中心即将上线，敬请期待!");
+        }
+
+        private void SettingClicked(object sender, MouseButtonEventArgs e)
+        {
+            new AlertWindow().showDialog("系统设置正在开发中，敬请期待！");
+        }
+
+        private void ShowEmojiBox(object sender, MouseButtonEventArgs e)
+        {
+            if (emoji_box.Visibility == Visibility.Hidden) { 
+                emoji_box.Visibility = Visibility.Visible;
+            }
+            else
+            {
+                emoji_box.Visibility = Visibility.Hidden;
+            }
+        }
+
+        private async void EmojiSendClickedAsync(object sender, MouseButtonEventArgs e)
+        {
+            string message = "https://bbbug.com/images/emoji/" + ((Image)e.Source).Source.ToString().Replace("pack://application:,,,/BBBUG音乐聊天室;component/Images/Emojis/", "");
+            Dictionary<string, string> postData = new Dictionary<string, string>()
+            {
+                {"to", roomId },
+                {"type", "img" },
+                {"msg", message },
+                {"resource", message },
+                {"where", "channel" },
+            };
+            JObject result = (JObject)await Https.PostAsync("message/send", postData);
+            if (result["code"].ToString().Equals(Https.CodeSuccess))
+            {
+            }
+            else
+            {
+                //显示错误的提示信息
                 AlertWindow alert = new AlertWindow();
                 alert.showDialog(result["msg"].ToString());
             }

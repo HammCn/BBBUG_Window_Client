@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:BBBUG.COM"
         mc:Ignorable="d"
-        Title="BBBUG音乐聊天室" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" OpacityMask="White" Height="236" Width="393.5"  >
+        Title="BBBUG音乐聊天室" WindowStartupLocation="CenterScreen" WindowStyle="None" AllowsTransparency="True" Background="Transparent" OpacityMask="White" Height="236" Width="393.5" Topmost="True"  >
     <Window.Effect>
         <DropShadowEffect BlurRadius="10" Color="#999" Direction="300" ShadowDepth="2"/>
     </Window.Effect>

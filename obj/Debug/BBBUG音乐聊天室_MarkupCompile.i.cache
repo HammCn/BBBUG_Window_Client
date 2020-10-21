@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\
+C:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\
 BBBUG.COM
 none
 false
 DEBUG;TRACE
-D:\Hamm\BBbug_Winform_Applicaiton\App.xaml
-4-1881022114
+C:\Hamm\BBbug_Winform_Applicaiton\App.xaml
+3-586628220
 
-161108688890
-125190525952
-LoadingWindow.xaml;AlertWindow.xaml;LoginWindow.xaml;MainWindow.xaml;
+1475180860
+125458165135
+AlertWindow.xaml;LoginWindow.xaml;MainWindow.xaml;
 
 True
 

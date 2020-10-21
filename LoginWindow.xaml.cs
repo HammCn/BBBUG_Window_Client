@@ -31,7 +31,11 @@ namespace BBBUG.COM
             this.user_account_value = Config.GetValue("user_account");
         }
 
-        private async void Button_Click(object sender, RoutedEventArgs e)
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            DoLogin();
+        }
+        private async void DoLogin()
         {
             string user_account = this.user_account.Text.Trim();
             string user_password = this.user_password.Password.Trim();
@@ -84,6 +88,14 @@ namespace BBBUG.COM
         {
             this.user_account.Text = this.user_account_value;
             //this.user_password.Password = "";
+        }
+
+        private void passwordBoxKeydown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                DoLogin();
+            }
         }
     }
 }

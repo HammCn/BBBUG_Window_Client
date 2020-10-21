@@ -27,7 +27,7 @@
         <Image Cursor="Hand" ToolTip="关闭" Source="Images/23.png" Stretch="Fill" Margin="21,16,345,240" Height="24" UseLayoutRounding="True" RenderOptions.BitmapScalingMode="HighQuality" SnapsToDevicePixels="True" MouseUp="Image_MouseUp"/>
         <Label Content="密码" Margin="32,167,301,68" FontSize="18"/>
         <Border CornerRadius="3" Background="#ddd" Margin="94,170,31,79">
-            <PasswordBox  Margin="1,1,1,1" FontSize="14" Padding="3,5,3,3" Name="user_password" Password=""/>
+            <PasswordBox  Margin="1,1,1,1" FontSize="14" Padding="3,5,3,3" Name="user_password" Password="" KeyDown="passwordBoxKeydown"/>
         </Border>
     </Grid>
 </Window>
