@@ -283,6 +283,8 @@ namespace BBBUG.COM
             {
                 //获取房间成功
                 userInfo = (JObject)result["data"];
+                Console.WriteLine(userInfo["user_head"].ToString());
+                my_head_img.Source = BitmapFrame.Create(new Uri(userInfo["user_head"].ToString(), false), BitmapCreateOptions.None, BitmapCacheOption.Default); ;
                 if (userInfo["myRoom"].ToString().Equals("False"))
                 {
                     enter_my_room.Text = "创建房间";
@@ -485,35 +487,41 @@ namespace BBBUG.COM
             }
             else if (result["type"].ToString().Equals("img"))
             {
-                WebClient client = new WebClient();
-                HMACSHA1 hmacsha1 = new HMACSHA1();
-                string fileUrl = getStaticImage(System.Web.HttpUtility.UrlDecode(result["content"].ToString(), System.Text.Encoding.UTF8));
-                byte[] rstRes = hmacsha1.ComputeHash(Encoding.UTF8.GetBytes(fileUrl));
-                string shaString = System.Web.HttpUtility.UrlEncode(Convert.ToBase64String(rstRes)); 
-                if(!System.IO.File.Exists(Environment.CurrentDirectory + "/temp/" + shaString + ".jpg")) { 
-                    client.DownloadFile(fileUrl, Environment.CurrentDirectory + "/temp/" + shaString + ".jpg");
-                }
-                Action action_update_message = () =>
-                {
-                    message_list.Items.Add(new Message()
+                try { 
+                    WebClient client = new WebClient();
+                    HMACSHA1 hmacsha1 = new HMACSHA1();
+                    string fileUrl = getStaticImage(System.Web.HttpUtility.UrlDecode(result["content"].ToString(), System.Text.Encoding.UTF8));
+                    byte[] rstRes = hmacsha1.ComputeHash(Encoding.UTF8.GetBytes(fileUrl));
+                    string shaString = System.Web.HttpUtility.UrlEncode(Convert.ToBase64String(rstRes)); 
+                    if(!System.IO.File.Exists(Environment.CurrentDirectory + "/temp/" + shaString + ".jpg")) { 
+                        client.DownloadFile(fileUrl, Environment.CurrentDirectory + "/temp/" + shaString + ".jpg");
+                    }
+                    Action action_update_message = () =>
                     {
-                        message_id = result["message_id"].ToString(),
-                        message_type = result["type"].ToString(),
-                        message_content = Environment.CurrentDirectory + "/temp/" + shaString + ".jpg",
-                        user_name = result["user"]["user_name"].ToString(),
-                        user_head = result["user"]["user_head"].ToString().Length < 5 ? "Images/nohead.jpg" : result["user"]["user_head"].ToString(),
-                        fromMe = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Visible : Visibility.Hidden,
-                        fromOther = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Hidden : Visibility.Visible,
-                        fromSystem = Visibility.Hidden,
-                        isPicture = result["type"].ToString().Equals("img") ? Visibility.Visible : Visibility.Hidden,
-                        isText = result["type"].ToString().Equals("text") ? Visibility.Visible : Visibility.Hidden,
-                        message_time = GetNowTimeFriendly(result["message_time"].ToString())
-                    });
-                    Decorator decorator = (Decorator)VisualTreeHelper.GetChild(message_list, 0);
-                    ScrollViewer scrollViewer = (ScrollViewer)decorator.Child;
-                    scrollViewer.ScrollToEnd();
-                };
-                message_list.Dispatcher.BeginInvoke(action_update_message);
+                        message_list.Items.Add(new Message()
+                        {
+                            message_id = result["message_id"].ToString(),
+                            message_type = result["type"].ToString(),
+                            message_content = Environment.CurrentDirectory + "/temp/" + shaString + ".jpg",
+                            user_name = result["user"]["user_name"].ToString(),
+                            user_head = result["user"]["user_head"].ToString().Length < 5 ? "Images/nohead.jpg" : result["user"]["user_head"].ToString(),
+                            fromMe = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Visible : Visibility.Hidden,
+                            fromOther = (int)result["user"]["user_id"] == (int)userInfo["user_id"] ? Visibility.Hidden : Visibility.Visible,
+                            fromSystem = Visibility.Hidden,
+                            isPicture = result["type"].ToString().Equals("img") ? Visibility.Visible : Visibility.Hidden,
+                            isText = result["type"].ToString().Equals("text") ? Visibility.Visible : Visibility.Hidden,
+                            message_time = GetNowTimeFriendly(result["message_time"].ToString())
+                        });
+                        Decorator decorator = (Decorator)VisualTreeHelper.GetChild(message_list, 0);
+                        ScrollViewer scrollViewer = (ScrollViewer)decorator.Child;
+                        scrollViewer.ScrollToEnd();
+                    };
+                    message_list.Dispatcher.BeginInvoke(action_update_message);
+                }
+                catch(Exception e)
+                {
+
+                }
             }
             else if (result["type"].ToString().Equals("system"))
             {

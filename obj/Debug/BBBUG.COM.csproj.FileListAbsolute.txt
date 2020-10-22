@@ -67,13 +67,11 @@ D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\SuperSocket.ClientEngine.dll
 D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\WebSocket4Net.dll
 D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\log4net.xml
 D:\Hamm\BBbug_Winform_Applicaiton\bin\Debug\Newtonsoft.Json.xml
-D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoadingWindow.g.cs
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\AlertWindow.g.cs
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoginWindow.g.cs
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\MainWindow.g.cs
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\App.g.cs
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\App.baml
-D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoadingWindow.baml
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\AlertWindow.baml
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\LoginWindow.baml
 D:\Hamm\BBbug_Winform_Applicaiton\obj\Debug\MainWindow.baml
