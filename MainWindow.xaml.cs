@@ -663,7 +663,7 @@ namespace BBBUG.COM
             }
             else
             {
-                return "https://api.bbbug.com/uploads/" + url;
+                return "https://static.bbbug.com/uploads/" + url;
             }
         }
         private void startAnimation()
@@ -1311,7 +1311,7 @@ namespace BBBUG.COM
 
         private async void EmojiSendClickedAsync(object sender, MouseButtonEventArgs e)
         {
-            string message = "https://bbbug.com/images/emoji/" + ((Image)e.Source).Source.ToString().Replace("pack://application:,,,/BBBUG音乐聊天室;component/Images/Emojis/", "");
+            string message = "https://cdn.bbbug.com/images/emoji/" + ((Image)e.Source).Source.ToString().Replace("pack://application:,,,/BBBUG音乐聊天室;component/Images/Emojis/", "");
             Dictionary<string, string> postData = new Dictionary<string, string>()
             {
                 {"to", roomId },
