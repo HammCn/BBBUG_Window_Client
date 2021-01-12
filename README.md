@@ -1,7 +1,11 @@
-<p align="left">
-<h1>BBBUG聊天室Windows客户端</h1>
+
+<h1 align="center">BBBUG聊天室 Windows客户端</h1>
+
+<p align="center">
+<a href="https://github.com/HammCn/BBBUG_Window_Client" target="_blank">Github</a> | 
+<a href="https://gitee.com/bbbug_com/BBbug_Winform_Applicaiton" target="_blank">Gitee</a>
 </p>
-<p align="left">
+<p align="center">
 <a href="https://gitee.com/bbbug_com/BBbug_Winform_Applicaiton/stargazers" target="_blank"><img src="https://svg.hamm.cn/gitee.svg?type=star&user=bbbug_com&project=ChatWEB"/></a>
 <a href="https://gitee.com/bbbug_com/BBbug_Winform_Applicaiton/members" target="_blank"><img src="https://svg.hamm.cn/gitee.svg?type=fork&user=bbbug_com&project=ChatWEB"/></a>
 <img src="https://svg.hamm.cn/badge.svg?key=Base&value=C%23 WPF"/>
